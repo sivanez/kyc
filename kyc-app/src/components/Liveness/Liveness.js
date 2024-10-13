@@ -5,9 +5,8 @@ const LivenessCheck = ({ onNext }) => {
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState('');
 
+  // Start the video stream once the component and the video element have been rendered
   useEffect(() => {
-    let cameraTimeout;
-
     const startVideoStream = async () => {
       try {
         console.log('Attempting to access camera...');
@@ -22,13 +21,13 @@ const LivenessCheck = ({ onNext }) => {
           },
         });
 
-        // Check if the videoRef.current is available before setting the stream
+        // Wait until the video element is rendered, then assign the stream
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           setStreaming(true);
           console.log('Camera stream started');
         } else {
-          console.log('videoRef is null, cannot set stream');
+          console.log('Waiting for video element to render...');
         }
       } catch (err) {
         console.error("Error accessing camera: ", err);
@@ -49,23 +48,20 @@ const LivenessCheck = ({ onNext }) => {
       }
     };
 
-    startVideoStream();
-
-    // Timeout after 10 seconds if the camera is not streaming
-    cameraTimeout = setTimeout(() => {
-      if (!streaming) {
-        setError('Camera is taking too long to load. Please check your device and permissions.');
-      }
-    }, 10000);
+    if (videoRef.current) {
+      startVideoStream();
+    } else {
+      console.log("videoRef is not yet available, waiting...");
+    }
 
     return () => {
-      clearTimeout(cameraTimeout); // Clear the timeout when the component unmounts
       if (videoRef.current && videoRef.current.srcObject) {
         const tracks = videoRef.current.srcObject.getTracks();
         tracks.forEach(track => track.stop());
       }
     };
-  }, [streaming]);
+  }, [videoRef.current]);  // Re-run this effect when videoRef.current changes
+
 
   const handleLivenessCheck = () => {
     if (streaming) {
@@ -80,26 +76,20 @@ const LivenessCheck = ({ onNext }) => {
     <div style={{ textAlign: 'center', margin: '20px' }}>
       <h2>Liveness Check</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {streaming ? (
-        <>
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            style={{ width: '100%', maxWidth: '400px', borderRadius: '10px', border: '2px solid #ddd' }}
-          />
-          <div style={{ marginTop: '20px' }}>
-            <button
-              onClick={handleLivenessCheck}
-              style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}
-            >
-              Confirm Liveness
-            </button>
-          </div>
-        </>
-      ) : (
-        <p>Loading camera...</p>
-      )}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        style={{ width: '100%', maxWidth: '400px', borderRadius: '10px', border: '2px solid #ddd' }}
+      />
+      <div style={{ marginTop: '20px' }}>
+        <button
+          onClick={handleLivenessCheck}
+          style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}
+        >
+          Confirm Liveness
+        </button>
+      </div>
     </div>
   );
 };
