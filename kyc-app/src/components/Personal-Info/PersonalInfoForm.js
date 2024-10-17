@@ -1,227 +1,73 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { TextField, Button, Typography, Box } from '@mui/material';
+import FormFrame from '../../styling/FormFrame';  // Correct import path
 
 const PersonalInfoForm = ({ onNext }) => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    dateOfBirth: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    nationality: '',
-    documentType: '',
-    documentNumber: '',
-    gender: '',
-    occupation: '',
-    maritalStatus: '',   // New Field
-    nationalIDNumber: '', // New Field
-    emergencyContactName: '',  // New Field
-    emergencyContactPhone: ''  // New Field
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().email('Invalid email format').required('Email is required'),
+    phoneNumber: Yup.string().required('Phone number is required'),
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    onNext(formData); // Pass form data to the next step
-  };
-
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto' }}>
-      <h2>Personal Information</h2>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Full Name</label>
-        <input
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Date of Birth</label>
-        <input
-          type="date"
-          name="dateOfBirth"
-          value={formData.dateOfBirth}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Email</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Phone Number</label>
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Address</label>
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>City</label>
-        <input
-          type="text"
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>State</label>
-        <input
-          type="text"
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Postal Code</label>
-        <input
-          type="text"
-          name="postalCode"
-          value={formData.postalCode}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Nationality</label>
-        <input
-          type="text"
-          name="nationality"
-          value={formData.nationality}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Document Type</label>
-        <select
-          name="documentType"
-          value={formData.documentType}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select...</option>
-          <option value="Passport">Passport</option>
-          <option value="Driver's License">Driver's License</option>
-          <option value="National ID">National ID</option>
-        </select>
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Document Number</label>
-        <input
-          type="text"
-          name="documentNumber"
-          value={formData.documentNumber}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Gender</label>
-        <select
-          name="gender"
-          value={formData.gender}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select...</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Occupation</label>
-        <input
-          type="text"
-          name="occupation"
-          value={formData.occupation}
-          onChange={handleChange}
-          required
-        />
-      </div>
+    <Formik
+      initialValues={{ name: '', email: '', phoneNumber: '' }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        onNext(values);
+      }}
+    >
+      {({ errors, touched }) => (
+        <FormFrame>
+          <Form>
+            <Typography variant="h6" align="center" gutterBottom>
+              Personal Information
+            </Typography>
 
-      {/* New Fields */}
-      <div style={{ marginBottom: '10px' }}>
-        <label>Marital Status</label>
-        <select
-          name="maritalStatus"
-          value={formData.maritalStatus}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select...</option>
-          <option value="Single">Single</option>
-          <option value="Married">Married</option>
-          <option value="Divorced">Divorced</option>
-        </select>
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>National ID Number</label>
-        <input
-          type="text"
-          name="nationalIDNumber"
-          value={formData.nationalIDNumber}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Emergency Contact Name</label>
-        <input
-          type="text"
-          name="emergencyContactName"
-          value={formData.emergencyContactName}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Emergency Contact Phone</label>
-        <input
-          type="tel"
-          name="emergencyContactPhone"
-          value={formData.emergencyContactPhone}
-          onChange={handleChange}
-          required
-        />
-      </div>
+            <Box mb={3}>
+              <Field
+                name="name"
+                as={TextField}
+                label="Name"
+                fullWidth
+                error={touched.name && !!errors.name}
+                helperText={<ErrorMessage name="name" />}
+              />
+            </Box>
 
-      <button type="submit" style={{ padding: '10px 20px' }}>Next</button>
-    </form>
+            <Box mb={3}>
+              <Field
+                name="email"
+                as={TextField}
+                label="Email"
+                fullWidth
+                error={touched.email && !!errors.email}
+                helperText={<ErrorMessage name="email" />}
+              />
+            </Box>
+
+            <Box mb={3}>
+              <Field
+                name="phoneNumber"
+                as={TextField}
+                label="Phone Number"
+                fullWidth
+                error={touched.phoneNumber && !!errors.phoneNumber}
+                helperText={<ErrorMessage name="phoneNumber" />}
+              />
+            </Box>
+
+            <Box textAlign="center" mt={4}>
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Next
+              </Button>
+            </Box>
+          </Form>
+        </FormFrame>
+      )}
+    </Formik>
   );
 };
 
