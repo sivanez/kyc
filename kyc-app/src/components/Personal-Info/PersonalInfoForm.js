@@ -147,4 +147,31 @@ const PersonalInfoForm = ({ onNext }) => {
       </div>
       <div style={{ marginBottom: '10px' }}>
         <label>Gender</label>
-        <
+        <select
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div style={{ marginBottom: '10px' }}>
+        <label>Occupation</label>
+        <input
+          type="text"
+          name="occupation"
+          value={formData.occupation}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <button type="submit" style={{ padding: '10px 20px' }}>Next</button>
+    </form>
+  );
+};
+
+export default PersonalInfoForm;
