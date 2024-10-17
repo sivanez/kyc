@@ -14,7 +14,11 @@ const PersonalInfoForm = ({ onNext }) => {
     documentType: '',
     documentNumber: '',
     gender: '',
-    occupation: ''
+    occupation: '',
+    maritalStatus: '',   // New Field
+    nationalIDNumber: '', // New Field
+    emergencyContactName: '',  // New Field
+    emergencyContactPhone: ''  // New Field
   });
 
   const handleChange = (e) => {
@@ -25,7 +29,7 @@ const PersonalInfoForm = ({ onNext }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    onNext(formData); // Pass form data to next step
+    onNext(formData); // Pass form data to the next step
   };
 
   return (
@@ -169,6 +173,53 @@ const PersonalInfoForm = ({ onNext }) => {
           required
         />
       </div>
+
+      {/* New Fields */}
+      <div style={{ marginBottom: '10px' }}>
+        <label>Marital Status</label>
+        <select
+          name="maritalStatus"
+          value={formData.maritalStatus}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select...</option>
+          <option value="Single">Single</option>
+          <option value="Married">Married</option>
+          <option value="Divorced">Divorced</option>
+        </select>
+      </div>
+      <div style={{ marginBottom: '10px' }}>
+        <label>National ID Number</label>
+        <input
+          type="text"
+          name="nationalIDNumber"
+          value={formData.nationalIDNumber}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div style={{ marginBottom: '10px' }}>
+        <label>Emergency Contact Name</label>
+        <input
+          type="text"
+          name="emergencyContactName"
+          value={formData.emergencyContactName}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div style={{ marginBottom: '10px' }}>
+        <label>Emergency Contact Phone</label>
+        <input
+          type="tel"
+          name="emergencyContactPhone"
+          value={formData.emergencyContactPhone}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
       <button type="submit" style={{ padding: '10px 20px' }}>Next</button>
     </form>
   );
